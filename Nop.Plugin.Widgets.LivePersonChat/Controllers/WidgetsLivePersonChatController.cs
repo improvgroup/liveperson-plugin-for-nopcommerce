@@ -1,34 +1,44 @@
 ﻿using System.Web.Mvc;
 using Nop.Plugin.Widgets.LivePersonChat.Models;
 using Nop.Services.Configuration;
+using Nop.Services.Localization;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.Widgets.LivePersonChat.Controllers
 {
     public class WidgetsLivePersonChatController : BasePluginController
     {
-        private readonly LivePersonChatSettings _livePersonChatSettings;
-        private readonly ISettingService _settingService;
+        #region Fields
 
-        public WidgetsLivePersonChatController(LivePersonChatSettings livePersonChatSettings, ISettingService settingService)
+        private readonly ILocalizationService _localizationService;
+        private readonly ISettingService _settingService;
+        private readonly LivePersonChatSettings _livePersonChatSettings;
+
+        #endregion
+
+        #region Ctor
+
+        public WidgetsLivePersonChatController(ISettingService settingService, 
+            ILocalizationService localizationService, 
+            LivePersonChatSettings livePersonChatSettings)
         {
-            this._livePersonChatSettings = livePersonChatSettings;
             this._settingService = settingService;
+            this._localizationService = localizationService;
+            this._livePersonChatSettings = livePersonChatSettings;
         }
-        
+
+        #endregion
+
+        #region Methods
+
         [AdminAuthorize]
         [ChildActionOnly]
         public ActionResult Configure()
         {
-            var model = new ConfigurationModel();
-            model.ButtonCode = _livePersonChatSettings.ButtonCode;
-            model.MonitoringCode = _livePersonChatSettings.MonitoringCode;
-
-            model.ZoneId = _livePersonChatSettings.WidgetZone;
-            model.AvailableZones.Add(new SelectListItem() { Text = "Before left side column", Value = "left_side_column_before" });
-            model.AvailableZones.Add(new SelectListItem() { Text = "After left side column", Value = "left_side_column_after" });
-            model.AvailableZones.Add(new SelectListItem() { Text = "Before right side column", Value = "right_side_column_before" });
-            model.AvailableZones.Add(new SelectListItem() { Text = "After right side column", Value = "right_side_column_after" });
+            var model = new ConfigurationModel
+            {
+                LiveEngageTag = _livePersonChatSettings.LiveEngageTag
+            };
 
             return View("~/Plugins/Widgets.LivePersonChat/Views/WidgetsLivePersonChat/Configure.cshtml", model);
         }
@@ -42,10 +52,11 @@ namespace Nop.Plugin.Widgets.LivePersonChat.Controllers
                 return Configure();
 
             //save settings
-            _livePersonChatSettings.ButtonCode = model.ButtonCode;
-            _livePersonChatSettings.MonitoringCode = model.MonitoringCode;
-            _livePersonChatSettings.WidgetZone = model.ZoneId;
+            _livePersonChatSettings.LiveEngageTag = model.LiveEngageTag;
+
             _settingService.SaveSetting(_livePersonChatSettings);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
             return Configure();
         }
@@ -53,11 +64,14 @@ namespace Nop.Plugin.Widgets.LivePersonChat.Controllers
         [ChildActionOnly]
         public ActionResult PublicInfo(string widgetZone)
         {
-            var model = new PublicInfoModel();
-            model.ButtonCode = _livePersonChatSettings.ButtonCode;
-            model.MonitoringCode = _livePersonChatSettings.MonitoringCode;
+            var model = new PublicInfoModel
+            {
+                LiveEngageTag = _livePersonChatSettings.LiveEngageTag
+            };
 
             return View("~/Plugins/Widgets.LivePersonChat/Views/WidgetsLivePersonChat/PublicInfo.cshtml", model);
         }
+
+        #endregion
     }
 }
