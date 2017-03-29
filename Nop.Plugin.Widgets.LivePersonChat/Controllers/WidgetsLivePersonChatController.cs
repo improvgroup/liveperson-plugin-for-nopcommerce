@@ -40,7 +40,7 @@ namespace Nop.Plugin.Widgets.LivePersonChat.Controllers
                 LiveEngageTag = _livePersonChatSettings.LiveEngageTag
             };
 
-            return View("~/Plugins/Widgets.LivePersonChat/Views/WidgetsLivePersonChat/Configure.cshtml", model);
+            return View("~/Plugins/Widgets.LivePersonChat/Views/Configure.cshtml", model);
         }
 
         [HttpPost]
@@ -69,7 +69,7 @@ namespace Nop.Plugin.Widgets.LivePersonChat.Controllers
                 LiveEngageTag = _livePersonChatSettings.LiveEngageTag
             };
 
-            return View("~/Plugins/Widgets.LivePersonChat/Views/WidgetsLivePersonChat/PublicInfo.cshtml", model);
+            return View("~/Plugins/Widgets.LivePersonChat/Views/PublicInfo.cshtml", model);
         }
 
         #endregion
