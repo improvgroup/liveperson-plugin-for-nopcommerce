@@ -1,9 +1,0 @@
-﻿Group: Widgets
-FriendlyName: Live person (Chat)
-SystemName: Widgets.LivePersonChat
-Version: 1.30
-SupportedVersions: 3.90
-Author: nopCommerce team
-DisplayOrder: 1
-FileName: Nop.Plugin.Widgets.LivePersonChat.dll
-Description: This plugin allows you to integrate with LivePerson to chat with your customers online

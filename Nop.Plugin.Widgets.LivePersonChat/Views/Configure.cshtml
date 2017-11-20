@@ -1,11 +1,10 @@
 ﻿@{
-    Layout = "";
+    Layout = "_ConfigurePlugin";
 }
+
 @model Nop.Plugin.Widgets.LivePersonChat.Models.ConfigurationModel
-@using Nop.Web.Framework;
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+
+<form asp-controller="WidgetsLivePersonChat" asp-action="Configure" method="post">
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
@@ -22,11 +21,11 @@
                 </p>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.LiveEngageTag)
+                        <nop-label asp-for="LiveEngageTag" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopTextAreaFor(model => model.LiveEngageTag)
-                        @Html.ValidationMessageFor(model => model.LiveEngageTag)
+                        <nop-editor asp-for="LiveEngageTag" />
+                        <span asp-validation-for="LiveEngageTag"></span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -37,4 +36,4 @@
             </div>
         </div>
     </div>
-}
+</form>

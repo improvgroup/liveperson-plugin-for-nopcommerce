@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.Web.Routing;
+using Nop.Core;
 using Nop.Core.Plugins;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
@@ -15,14 +15,16 @@ namespace Nop.Plugin.Widgets.LivePersonChat
         #region Fields
 
         private readonly ISettingService _settingService;
+        private readonly IWebHelper _webHelper;
 
         #endregion
 
         #region Ctor
 
-        public LivePersonChatPlugin(ISettingService settingService)
+        public LivePersonChatPlugin(ISettingService settingService, IWebHelper webHelper)
         {
             this._settingService = settingService;
+            this._webHelper = webHelper;
         }
 
         #endregion
@@ -35,39 +37,17 @@ namespace Nop.Plugin.Widgets.LivePersonChat
         /// <returns>Widget zones</returns>
         public IList<string> GetWidgetZones()
         {
-            return new List<string>() { "body_end_html_tag_before" };
+            return new List<string> { "body_end_html_tag_before" };
         }
 
-        /// <summary>
-        /// Gets a route for provider configuration
-        /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        public void GetPublicViewComponent(string widgetZone, out string viewComponentName)
         {
-            actionName = "Configure";
-            controllerName = "WidgetsLivePersonChat";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Widgets.LivePersonChat.Controllers" }, { "area", null } };
+            viewComponentName = "WidgetsLivePerson";
         }
 
-        /// <summary>
-        /// Gets a route for displaying widget
-        /// </summary>
-        /// <param name="widgetZone">Widget zone where it's displayed</param>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetDisplayWidgetRoute(string widgetZone, out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        public override string GetConfigurationPageUrl()
         {
-            actionName = "PublicInfo";
-            controllerName = "WidgetsLivePersonChat";
-            routeValues = new RouteValueDictionary()
-            {
-                {"Namespaces", "Nop.Plugin.Widgets.LivePersonChat.Controllers"},
-                {"area", null},
-                {"widgetZone", widgetZone}
-            };
+            return $"{_webHelper.GetStoreLocation()}Admin/WidgetsLivePersonChat/Configure";
         }
         
         /// <summary>
@@ -76,7 +56,7 @@ namespace Nop.Plugin.Widgets.LivePersonChat
         public override void Install()
         {
             //settings
-            var settings = new LivePersonChatSettings()
+            var settings = new LivePersonChatSettings
             {
                 LiveEngageTag = ""
             };
