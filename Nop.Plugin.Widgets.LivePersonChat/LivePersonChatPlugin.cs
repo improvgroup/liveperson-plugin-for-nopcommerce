@@ -14,6 +14,7 @@ namespace Nop.Plugin.Widgets.LivePersonChat
     {
         #region Fields
 
+        private readonly ILocalizationService _localizationService;
         private readonly ISettingService _settingService;
         private readonly IWebHelper _webHelper;
 
@@ -21,8 +22,11 @@ namespace Nop.Plugin.Widgets.LivePersonChat
 
         #region Ctor
 
-        public LivePersonChatPlugin(ISettingService settingService, IWebHelper webHelper)
+        public LivePersonChatPlugin(ILocalizationService localizationService, 
+            ISettingService settingService, 
+            IWebHelper webHelper)
         {
+            this._localizationService = localizationService;
             this._settingService = settingService;
             this._webHelper = webHelper;
         }
@@ -62,8 +66,8 @@ namespace Nop.Plugin.Widgets.LivePersonChat
             };
             _settingService.SaveSetting(settings);
 
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.LivePersonChat.LiveEngageTag", "LiveEngage Tag");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.LivePersonChat.LiveEngageTag.Hint", "Enter your LiveEngage Tag code here.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.LivePersonChat.LiveEngageTag", "LiveEngage Tag");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.LivePersonChat.LiveEngageTag.Hint", "Enter your LiveEngage Tag code here.");
 
             base.Install();
         }
@@ -77,10 +81,20 @@ namespace Nop.Plugin.Widgets.LivePersonChat
             _settingService.DeleteSetting<LivePersonChatSettings>();
 
             //locales
-            this.DeletePluginLocaleResource("Plugins.Widgets.LivePersonChat.LiveEngageTag");
-            this.DeletePluginLocaleResource("Plugins.Widgets.LivePersonChat.LiveEngageTag.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.LivePersonChat.LiveEngageTag");
+            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.LivePersonChat.LiveEngageTag.Hint");
 
             base.Uninstall();
+        }
+
+        /// <summary>
+        /// Gets a name of a view component for displaying widget
+        /// </summary>
+        /// <param name="widgetZone">Name of the widget zone</param>
+        /// <returns>View component name</returns>
+        public string GetWidgetViewComponentName(string widgetZone)
+        {
+            return "WidgetsLivePerson";
         }
 
         #endregion
